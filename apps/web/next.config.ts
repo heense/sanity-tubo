@@ -1,5 +1,14 @@
 import type { NextConfig } from "next";
 
+// We're using middleware for dynamic redirects from Sanity, but this function
+// can be used if we ever need to add static redirects as well
+async function getStaticRedirects() {
+  return [
+    // Add any static redirects here if needed
+    // Example: { source: '/old-page', destination: '/new-page', permanent: true }
+  ];
+}
+
 const nextConfig: NextConfig = {
   /* config options here */
   transpilePackages: ["@workspace/ui"],
@@ -20,6 +29,10 @@ const nextConfig: NextConfig = {
         pathname: `/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/**`,
       },
     ],
+  },
+  // Static redirects (if needed)
+  async redirects() {
+    return await getStaticRedirects();
   },
 };
 

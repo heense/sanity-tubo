@@ -4,6 +4,7 @@ import {
   CogIcon,
   File,
   FileText,
+  GitFork,
   HomeIcon,
   type LucideIcon,
   MessageCircleQuestion,
@@ -130,6 +131,12 @@ export const structure = (
           S.list()
             .title("Site Configuration")
             .items([
+              createList({
+                S,
+                type: "redirect",
+                title: "Redirects",
+                icon: GitFork,
+              }),
               createSingleTon({
                 S,
                 type: "navbar",
