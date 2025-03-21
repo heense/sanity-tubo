@@ -77,10 +77,10 @@ async function getCachedRedirects() {
   // Otherwise fetch fresh redirects
   const redirects = await getRedirects();
 
-  console.log(
-    "Fetched fresh redirects from Sanity:",
-    JSON.stringify(redirects, null, 2),
-  );
+  // console.log(
+  //   "Fetched fresh redirects from Sanity:",
+  //   JSON.stringify(redirects, null, 2),
+  // );
 
   // Update cache
   redirectsCache = {

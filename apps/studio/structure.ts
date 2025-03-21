@@ -8,6 +8,7 @@ import {
   HomeIcon,
   type LucideIcon,
   MessageCircleQuestion,
+  BookOpen,
   PanelBottomIcon,
   PanelTopDashedIcon,
   Settings2,
@@ -123,6 +124,7 @@ export const structure = (
         icon: MessageCircleQuestion,
       }),
       createList({ S, type: "author", title: "Authors", icon: User }),
+      createList({ S, type: "lesson", title: "Lessons", icon: BookOpen }),
       S.divider(),
       S.listItem()
         .title("Site Configuration")

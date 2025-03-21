@@ -61,6 +61,12 @@ export const homePage = defineType({
       (field) => !["seoNoIndex", "seoHideFromLists"].includes(field.name),
     ),
     ...ogFields,
+    defineField({
+      name: "language",
+      type: "string",
+      readOnly: true,
+      hidden: true,
+    }),
   ],
   preview: {
     select: {

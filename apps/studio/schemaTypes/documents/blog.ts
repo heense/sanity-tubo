@@ -136,6 +136,12 @@ export const blog = defineType({
     }),
     ...seoFields,
     ...ogFields,
+    defineField({
+      name: "language",
+      type: "string",
+      readOnly: true,
+      hidden: true,
+    }),
   ],
   preview: {
     select: {
