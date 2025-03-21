@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
   transpilePackages: ["@workspace/ui"],
   experimental: {
     reactCompiler: true,
-    ppr: true,
+    // ppr: true,
     inlineCss: true,
   },
   logging: {
