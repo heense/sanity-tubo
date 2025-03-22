@@ -1,5 +1,5 @@
+import { defaultLocale, locales } from "@/lib/i18n/config";
 import { NextResponse, type NextRequest } from "next/server";
-
 import { getRedirects } from "./lib/sanity/redirects";
 
 // In-memory cache for redirects to avoid fetching from Sanity on every request
@@ -16,17 +16,32 @@ let redirectsCache: {
 const CACHE_DURATION = 5 * 60 * 1000;
 
 export async function middleware(request: NextRequest) {
+  // Get the pathname from the URL
   const { pathname } = request.nextUrl;
 
-  console.log("Middleware running for path:", pathname);
-
-  // Skip middleware for specific paths (static files, api routes, etc.)
+  // Skip paths with extensions (except .html)
   if (
-    pathname.startsWith("/_next") ||
-    pathname.startsWith("/api") ||
-    pathname.includes(".") // Skip files with extensions like images, fonts, etc.
+    /\.\w+$/.test(pathname) &&
+    !pathname.endsWith(".html") &&
+    !pathname.startsWith("/_next")
   ) {
     return NextResponse.next();
+  }
+
+  // Check if the pathname already includes a locale
+  const pathnameHasLocale = locales.some(
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
+  );
+
+  // Redirect if there is no locale
+  if (!pathnameHasLocale && !pathname.startsWith("/api/")) {
+    // Use default locale for simplicity
+    return NextResponse.redirect(
+      new URL(
+        `/${defaultLocale}${pathname === "/" ? "" : pathname}`,
+        request.url,
+      ),
+    );
   }
 
   // Get redirects with caching
@@ -38,31 +53,27 @@ export async function middleware(request: NextRequest) {
   const matchedRedirect = redirects.find((redirect) => {
     // Remove leading slash for comparison if it exists
     const normalizedSource = redirect.source.startsWith("/")
-      ? redirect.source
-      : "/" + redirect.source;
+      ? redirect.source.substring(1)
+      : redirect.source;
+    const normalizedPath = pathname.startsWith("/")
+      ? pathname.substring(1)
+      : pathname;
 
-    console.log(`Comparing: "${normalizedSource}" with "${pathname}"`);
-
-    return normalizedSource === pathname || normalizedSource === pathname + "/";
+    return normalizedSource === normalizedPath;
   });
 
-  console.log("Matched redirect:", matchedRedirect);
-
-  // If a matching redirect is found, redirect the user
   if (matchedRedirect) {
-    console.log("Redirecting to:", matchedRedirect.destination);
-    const statusCode = matchedRedirect.permanent ? 308 : 307;
-    // Ensure destination starts with / if it's a relative path
-    const destination = matchedRedirect.destination.startsWith("/")
-      ? matchedRedirect.destination
-      : "/" + matchedRedirect.destination;
-
-    return NextResponse.redirect(new URL(destination, request.url), {
-      status: statusCode,
-    });
+    // console.log("Matched redirect:", matchedRedirect);
+    return NextResponse.redirect(
+      new URL(
+        matchedRedirect.destination,
+        // Get the URL with the protocol and host
+        `${request.nextUrl.protocol}//${request.headers.get("host") || request.nextUrl.host}`,
+      ),
+      matchedRedirect.permanent ? 308 : 307,
+    );
   }
 
-  // If no redirect is found, continue with the request
   return NextResponse.next();
 }
 
@@ -93,5 +104,5 @@ async function getCachedRedirects() {
 
 // Specify which paths this middleware will run on
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

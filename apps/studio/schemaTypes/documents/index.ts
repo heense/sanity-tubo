@@ -1,6 +1,7 @@
 import { author } from "./author";
 import { blog } from "./blog";
 import { blogIndex } from "./blog-index";
+import dictionary from "./dictionary";
 import { faq } from "./faq";
 import { footer } from "./footer";
 import { homePage } from "./home-page";
@@ -19,5 +20,6 @@ export const documents = [
   author,
   redirect,
   lesson,
+  dictionary,
   ...singletons,
 ];
