@@ -32,7 +32,7 @@ export async function middleware(request: NextRequest) {
   // Get redirects with caching
   const redirects = await getCachedRedirects();
 
-  console.log("Available redirects:", JSON.stringify(redirects, null, 2));
+  // console.log("Available redirects:", JSON.stringify(redirects, null, 2));
 
   // Find matching redirect
   const matchedRedirect = redirects.find((redirect) => {

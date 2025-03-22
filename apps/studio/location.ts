@@ -53,4 +53,20 @@ export const locations = {
       };
     },
   }),
+  lesson: defineLocations({
+    select: {
+      title: "title",
+      slug: "slug.current",
+    },
+    resolve: (doc) => {
+      return {
+        locations: [
+          {
+            title: doc?.title || "Untitled",
+            href: `/lessons/${doc?.slug}`,
+          },
+        ],
+      };
+    },
+  }),
 };

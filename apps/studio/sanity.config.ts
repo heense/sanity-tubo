@@ -1,15 +1,15 @@
 import { assist } from "@sanity/assist";
+import { documentInternationalization } from "@sanity/document-internationalization";
 import { visionTool } from "@sanity/vision";
 import { defineConfig } from "sanity";
-import { presentationTool } from "sanity/presentation";
-import { structureTool } from "sanity/structure";
-import { iconPicker } from "sanity-plugin-icon-picker";
-import { media, mediaAssetSource } from "sanity-plugin-media";
 import {
   unsplashAssetSource,
   unsplashImageAsset,
 } from "sanity-plugin-asset-source-unsplash";
-import { documentInternationalization } from "@sanity/document-internationalization";
+import { iconPicker } from "sanity-plugin-icon-picker";
+import { media, mediaAssetSource } from "sanity-plugin-media";
+import { presentationTool } from "sanity/presentation";
+import { structureTool } from "sanity/structure";
 
 import { Logo } from "./components/logo";
 import { locations } from "./location";
@@ -63,11 +63,12 @@ export default defineConfig({
     documentInternationalization({
       // Required configuration
       supportedLanguages: [
-        { id: "es", title: "Spanish" },
         { id: "en", title: "English" },
+        { id: "es", title: "Spanish" },
         { id: "dk", title: "Danish" },
       ],
-      schemaTypes: ["lesson", "homePage", "blog"],
+      schemaTypes: ["lesson", "homePage", "blog", "page", "blogIndex"],
+      weakReferences: true,
     }),
   ],
 
